@@ -1,0 +1,15 @@
+import wollok.game.*
+import celdita.*
+//import menu.*
+
+program celditaGame {
+	game.title("Celdita")
+	game.height(10)
+	game.width(20)
+	game.boardGround("fondo_bosque.jpg")
+	
+//COMIENZO
+	//menu.iniciar()
+	celdita.iniciar()
+	game.start()
+}
