@@ -1,6 +1,6 @@
 import wollok.game.*
-import monstruos.*
-import pocion.*
+//import monstruos.*
+//import pocion.*
 import extra.*
 
 object tomas {	
@@ -19,7 +19,10 @@ object tomas {
 	method image() = "tomas_basico.png"
 	method estaEnTablero(posicion) = posicion.x().between(0, 19) and posicion.y().between(0, 9)
 	//Verificar que el movimiento sea legal, que no haya obstaculos y que no ocupe el mismo lugar que el monstruo
-	method procesarMovimiento(){}
+	method procesarMovimiento(){
+		
+		
+	}
 	
 	method moverseA(nuevaPosicion) {
 		if (self.estaEnTablero(nuevaPosicion) and vivo){
@@ -42,7 +45,7 @@ object tomas {
 
 //Agarrar objetos
 	method agarrar(objeto){
-		if (objeto == espada){
+		if (objeto.equals(espada)){
 			tieneEspada = true
 		} else if (mochila.size() < capacidad){
 			mochila.add(objeto)
@@ -52,13 +55,7 @@ object tomas {
 		objeto.desaparecer()
 	}
 	
-//Usar pociones
-	method usarPocion(numero){
-		if (mochila.isNotEmpty()){
-			mochila.get(numero).activar()
-			mochila.remove(mochila.get(numero))
-		} else { game.say(self, "No tengo pociones")}
-	}
+
 	
 //Matar monstruos 
 	method atacar() {
@@ -68,4 +65,17 @@ object tomas {
 			//monstruo.recibirDanio(poderBase/2)
 		//}
 	}	
+}
+
+object tomasIzquierda{
+	method position() = game.at(tomas.position().x()-1, tomas.position().y())
+}
+object tomasDerecha{
+	method position() = game.at(tomas.position().x()+1, tomas.position().y())
+}
+object tomasArriba{
+	method position() = game.at(tomas.position().x(), tomas.position().y()+1)
+}
+object tomasAbajo{
+	method position() = game.at(tomas.position().x(), tomas.position().y()-1)
 }
