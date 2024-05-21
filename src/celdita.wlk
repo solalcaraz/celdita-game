@@ -25,9 +25,12 @@ object config {
 		keyboard.w().onPressDo({ tomas.moverseA(tomas.position().up(1))})
 		keyboard.s().onPressDo({ tomas.moverseA(tomas.position().down(1))})
 		//Para agarrar
-		keyboard.n().onPressDo({ tomas.agarrar( game.uniqueCollider(tomas))})
+		keyboard.n().onPressDo({ tomas.agarrar()})
 		//Para atacar, REVISAR
-		keyboard.m().onPressDo({ tomas.atacar()})
+		keyboard.up().onPressDo({ tomas.atacar(tomas.position().up(1))})
+		keyboard.down().onPressDo({ tomas.atacar(tomas.position().down(1))})
+		keyboard.left().onPressDo({ tomas.atacar(tomas.position().left(1))})
+		keyboard.right().onPressDo({ tomas.atacar(tomas.position().right(1))})
 		//Para usar las pociones
 //		keyboard.num1().onPressDo({ tomas.usarPocion(0)})
 //		keyboard.num2().onPressDo({ tomas.usarPocion(1)})
@@ -35,9 +38,9 @@ object config {
 	}
 	method configurarColision(){
 		game.onCollideDo( tomas, { algo => algo.esEncontrado(tomas) })
-		game.onCollideDo( tomasDerecha, { algo => algo.esEncontrado(tomasDerecha) })
-		game.onCollideDo( tomasArriba, { algo => algo.esEncontrado(tomasArriba) })
-		game.onCollideDo( tomasAbajo, { algo => algo.esEncontrado(tomasAbajo) })
+		game.onCollideDo( tomasDerecha, { algo => algo.proximidadTomas(tomasDerecha) })
+		game.onCollideDo( tomasArriba, { algo => algo.proximidadTomas(tomasArriba) })
+		game.onCollideDo( tomasAbajo, { algo => algo.proximidadTomas(tomasAbajo) })
 		game.onCollideDo( tomasIzquierda, { algo => algo.esEncontrado(tomasIzquierda) })
 	}
 }

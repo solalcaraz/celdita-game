@@ -8,5 +8,9 @@ object espada {
 	method esEncontrado(personaje) {
 		game.say(self, game.uniqueCollider(self).toString())
 	}
+	
+	method proximidadTomas(collider){
+		game.say(self, "Una espada!")
+	}
 	method desaparecer(){ game.removeVisual(self)}
 }

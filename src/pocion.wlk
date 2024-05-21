@@ -14,7 +14,7 @@ class Pociones{
 		
 	method esEncontrado(personaje){}
 	
-	method image(){}
+	method image() = "default.png"
 	method activar(){}
 }
 

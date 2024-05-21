@@ -44,38 +44,50 @@ object tomas {
 	}
 
 //Agarrar objetos
-	method agarrar(objeto){
-		if (objeto.equals(espada)){
-			tieneEspada = true
-		} else if (mochila.size() < capacidad){
-			mochila.add(objeto)
-		} else {
-			game.say(self, "No puedo cargar más")
+	method agarrar(){
+		if (not game.colliders(self).isEmpty()){
+			if (game.uniqueCollider(self).equals(espada)){
+				tieneEspada = true
+			} else if (mochila.size() < capacidad){
+				mochila.add(game.uniqueCollider(self))
+			} else {
+				game.say(self, "No puedo cargar más")
+			}
+			game.uniqueCollider(self).desaparecer()
+			
 		}
-		objeto.desaparecer()
 	}
 	
 
 	
 //Matar monstruos 
-	method atacar() {
-		//if(tieneEspada){
-			//monstruo.recibirDanio(poderBase)
-		//} else {
-			//monstruo.recibirDanio(poderBase/2)
-		//}
+	method atacar(posicion) {
+		if(not game.getObjectsIn(posicion).size().equals(1)){		
+			if(tieneEspada){
+				posicion.recibirDanio(poderBase)
+			} else {
+				posicion.recibirDanio(poderBase/2)
+			}		
+		}else {
+			game.say(self, "No hay nada que atacar!")
+		}
+		
 	}	
 }
 
 object tomasIzquierda{
 	method position() = game.at(tomas.position().x()-1, tomas.position().y())
+	method posTomas() = game.at(tomas.position().x(), tomas.position().y())
 }
 object tomasDerecha{
 	method position() = game.at(tomas.position().x()+1, tomas.position().y())
+	method posTomas() = game.at(tomas.position().x(), tomas.position().y())
 }
 object tomasArriba{
 	method position() = game.at(tomas.position().x(), tomas.position().y()+1)
+	method posTomas() = game.at(tomas.position().x(), tomas.position().y())
 }
 object tomasAbajo{
 	method position() = game.at(tomas.position().x(), tomas.position().y()-1)
+	method posTomas() = game.at(tomas.position().x(), tomas.position().y())
 }
