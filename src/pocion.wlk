@@ -23,7 +23,9 @@ class PocionInvisibilidad inherits Pociones {
 
 //Poder que activa la pocion en el personaje	
 	//te da invisibilidad por un par de segundos y vida al maximo
-	 override method activar(){	}
+	 override method activar(){
+		tomas.vida = 100
+	 }
 }
 
 class PocionFuerza inherits Pociones {
@@ -31,13 +33,19 @@ class PocionFuerza inherits Pociones {
 
 //Poder que activa la pocion en el personaje
 	//te da poder extra, quizas por un tiempo determinado
-	 override method activar(){	}
+	 override method activar(){
+		tomas.poderBase = 10
+		game.schedule(5000, { tomas.poderBase = 5})
+
+	 }
 }
 
 class PocionAturdimiento inherits Pociones {
 	 override method image() = "pocion_aturdimiento.png"
 
+
 //Poder que activa la pocion en el personaje
 	//deja quieto a los bichos que esten al rededor del personaje, tipo 3 posiciones al rededor o bien a todos los personajes en general
-	 override method activar(){	}
+	 override method activar(){	
+		}
 }
