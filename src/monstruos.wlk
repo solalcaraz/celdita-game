@@ -46,6 +46,7 @@ class Monstruos {
 
 //Acciones independientes para cada tipo
 	method atacar(posicion){
+		//if(si esta activa la pocion de aturdimiento){ no ataca el monstruo }
 		if(not game.getObjectsIn(posicion).isEmpty()){
 			game.getObjectsIn(posicion).first().esAtacado(poderBase)
 		}
