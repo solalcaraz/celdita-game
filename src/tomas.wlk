@@ -12,7 +12,7 @@ object tomas {
 	var property estado = "basico"
 	
 	var property tieneEspada = false
-	var property poderBase = 5
+	var property poderBase = 20
 	
 //Configurar posicion e imagen
 	var property position = game.at(0, 4)
@@ -66,12 +66,12 @@ object tomas {
 
 	
 //Matar monstruos 
-	method atacar(posicion) {
-		if(not game.getObjectsIn(posicion).size().equals(1)){		
+	method atacar(colisionador) {
+		if(not game.colliders(colisionador).isEmpty()){		
 			if(tieneEspada){
-				posicion.recibirDanio(poderBase)
+				game.uniqueCollider(colisionador).recibirDanio(poderBase)
 			} else {
-				posicion.recibirDanio(poderBase/2)
+				game.uniqueCollider(colisionador).recibirDanio(poderBase/2)
 			}		
 		}else {
 			game.say(self, "No hay nada que atacar!")
@@ -79,6 +79,8 @@ object tomas {
 		
 	}	
 }
+
+
 
 object tomasIzquierda{
 	method position() = game.at(tomas.position().x()-1, tomas.position().y())

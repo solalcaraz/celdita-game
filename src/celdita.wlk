@@ -12,7 +12,7 @@ object celdita {
 		game.addVisual(tomasDerecha)
 		game.addVisual(tomasArriba)
 		game.addVisual(tomasAbajo)
-		const pepe = new Monstruos(position=game.center(),poderBase = 5,vida = 100, pocion=new PocionFuerza(position=game.center()))
+		const pepe = new Monstruos(position=game.center(),poderBase = 10,vida = 100, pocion=new PocionFuerza(position=game.center()))
 		game.addVisual(pepe)
 		config.configurarTeclas()
 		config.configurarColision()
@@ -28,10 +28,10 @@ object config {
 		//Para agarrar
 		keyboard.n().onPressDo({ tomas.agarrar()})
 		//Para atacar, REVISAR
-		keyboard.up().onPressDo({ tomas.atacar(tomas.position().up(1))})
-		keyboard.down().onPressDo({ tomas.atacar(tomas.position().down(1))})
-		keyboard.left().onPressDo({ tomas.atacar(tomas.position().left(1))})
-		keyboard.right().onPressDo({ tomas.atacar(tomas.position().right(1))})
+		keyboard.up().onPressDo({ tomas.atacar(tomasArriba)})
+		keyboard.down().onPressDo({ tomas.atacar(tomasAbajo)})
+		keyboard.left().onPressDo({ tomas.atacar(tomasIzquierda)})
+		keyboard.right().onPressDo({ tomas.atacar(tomasDerecha)})
 		//Para usar las pociones
 //		keyboard.num1().onPressDo({ tomas.usarPocion(0)})
 //		keyboard.num2().onPressDo({ tomas.usarPocion(1)})
