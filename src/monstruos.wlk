@@ -6,10 +6,11 @@ class Monstruos {
 	var vida
 	var poderBase
 	var pocion
+	var property estado = "basico"
 
 //Posicion e imagen para los monstruos en general
 	var property position
-	method image() = "pocion_aturdimiento.png"
+	method image() = "monstruo1_" + estado + ".png"
 	method aparecer(){
 		position = game.at(0.randomUpTo(game.width()).truncate(0), 0.randomUpTo(game.height()).truncate(0))
 		self.movimiento()
@@ -31,6 +32,8 @@ class Monstruos {
 	
 //Vida del monstruo
 	method recibirDanio(danio){
+		estado = "herido"
+		game.schedule(50,{estado = "basico"})
 		vida -= danio
 		if(vida <= 0){ self.morir()}
 	}

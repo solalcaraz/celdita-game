@@ -39,6 +39,7 @@ object tomas {
 		vida -= danio 
 		if(vida <= 0) { self.morir()}
 	}
+	
 	method morir() {
 		vivo = false
 		game.say(self, "Has muerto!")
