@@ -1,5 +1,6 @@
 import wollok.game.*
 import monstruos.*
+import tomas.*
 
 class Pociones{
 	var property position
@@ -24,7 +25,7 @@ class PocionInvisibilidad inherits Pociones {
 //Poder que activa la pocion en el personaje	
 	//te da invisibilidad por un par de segundos y vida al maximo
 	 override method activar(){
-		tomas.vida = 100
+		tomas.vida(100)
 	 }
 }
 
@@ -34,8 +35,8 @@ class PocionFuerza inherits Pociones {
 //Poder que activa la pocion en el personaje
 	//te da poder extra, quizas por un tiempo determinado
 	 override method activar(){
-		tomas.poderBase = 10
-		game.schedule(5000, { tomas.poderBase = 5})
+		tomas.poderBase(10)
+		game.schedule(5000, { tomas.poderBase(5)})
 
 	 }
 }

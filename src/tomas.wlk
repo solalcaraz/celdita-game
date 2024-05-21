@@ -9,6 +9,7 @@ object tomas {
 	
 	var property vivo = true
 	var property vida = 100
+	var property estado = "basico"
 	
 	var property tieneEspada = false
 	var property poderBase = 5
@@ -16,7 +17,7 @@ object tomas {
 //Configurar posicion e imagen
 	var property position = game.at(0, 4)
 	
-	method image() = "tomas_basico.png"
+	method image() = "tomas_" + estado + ".png"
 	method estaEnTablero(posicion) = posicion.x().between(0, 19) and posicion.y().between(0, 9)
 	//Verificar que el movimiento sea legal, que no haya obstaculos y que no ocupe el mismo lugar que el monstruo
 	method procesarMovimiento(){
@@ -32,6 +33,9 @@ object tomas {
 	
 //Vida del personaje
 	method esAtacado(danio) {
+		estado = "herido"
+		game.schedule(80,{estado = "basico"}
+		)
 		vida -= danio 
 		if(vida <= 0) { self.morir()}
 	}

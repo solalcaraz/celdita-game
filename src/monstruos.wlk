@@ -21,7 +21,7 @@ class Monstruos {
 	}
 	
 	method continuarAtaque(colisionador){
-		if(game.uniqueCollider(colisionador).equals(self)){
+		if(game.colliders(colisionador).isNotEmpty() and game.uniqueCollider(colisionador).equals(self)){
 			game.schedule(1000, {self.atacar(colisionador.posTomas())})
 			game.schedule(1000, {self.continuarAtaque(colisionador)})
 		}
