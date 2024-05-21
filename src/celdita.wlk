@@ -1,8 +1,8 @@
 import wollok.game.*
 import tomas.*
-//import monstruos.*
-//import pocion.*
+import pocion.*
 import extra.*
+import monstruos.*
 
 object celdita {
 	method iniciar() {
@@ -12,7 +12,8 @@ object celdita {
 		game.addVisual(tomasDerecha)
 		game.addVisual(tomasArriba)
 		game.addVisual(tomasAbajo)
-		
+		const pepe = new Monstruos(position=game.center(),poderBase = 5,vida = 100, pocion=new PocionFuerza(position=game.center()))
+		game.addVisual(pepe)
 		config.configurarTeclas()
 		config.configurarColision()
 	}
@@ -37,7 +38,7 @@ object config {
 //		keyboard.num3().onPressDo({ tomas.usarPocion(2)})
 	}
 	method configurarColision(){
-		game.onCollideDo( tomas, { algo => algo.esEncontrado(tomas) })
+//		game.onCollideDo( tomas, { algo => algo.esEncontrado(tomas) })
 		game.onCollideDo( tomasDerecha, { algo => algo.proximidadTomas(tomasDerecha) })
 		game.onCollideDo( tomasArriba, { algo => algo.proximidadTomas(tomasArriba) })
 		game.onCollideDo( tomasAbajo, { algo => algo.proximidadTomas(tomasAbajo) })

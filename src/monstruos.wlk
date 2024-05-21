@@ -9,7 +9,7 @@ class Monstruos {
 
 //Posicion e imagen para los monstruos en general
 	var property position
-	method image()
+	method image() = "pocion_aturdimiento.png"
 	method aparecer(){
 		position = game.at(0.randomUpTo(game.width()).truncate(0), 0.randomUpTo(game.height()).truncate(0))
 		self.movimiento()
