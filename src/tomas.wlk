@@ -12,7 +12,9 @@ object tomas {
 	var property estado = "basico"
 	
 	var property tieneEspada = false
-	var property poderBase = 20
+	var property poderBase = 10
+	
+	var property esInvencible = false
 	
 //Configurar posicion e imagen
 	var property position = game.at(0, 4)
@@ -48,23 +50,10 @@ object tomas {
 		game.schedule(5000, { game.stop()})
 	}
 
-//Agarrar objetos
-	method agarrar(){
-		if (not game.colliders(self).isEmpty()){
-			if (game.uniqueCollider(self).equals(espada)){
-				tieneEspada = true
-			} else if (mochila.size() < capacidad){
-				mochila.add(game.uniqueCollider(self))
-			} else {
-				game.say(self, "No puedo cargar más")
-			}
-			game.uniqueCollider(self).desaparecer()
-			
-		}
-	}
+//Uso de pociones
+	method tieneCapacidad() = mochila.size() < capacidad
 	
-
-	
+		
 //Matar monstruos 
 	method atacar(colisionador) {
 		if(not game.colliders(colisionador).isEmpty()){		
@@ -81,20 +70,19 @@ object tomas {
 }
 
 
-
-object tomasIzquierda{
-	method position() = game.at(tomas.position().x()-1, tomas.position().y())
+class ObjetoInvisible {
+	method position()
 	method posTomas() = game.at(tomas.position().x(), tomas.position().y())
 }
-object tomasDerecha{
-	method position() = game.at(tomas.position().x()+1, tomas.position().y())
-	method posTomas() = game.at(tomas.position().x(), tomas.position().y())
+object tomasIzquierda inherits ObjetoInvisible {
+	override method position() = game.at(tomas.position().x()-1, tomas.position().y())
 }
-object tomasArriba{
-	method position() = game.at(tomas.position().x(), tomas.position().y()+1)
-	method posTomas() = game.at(tomas.position().x(), tomas.position().y())
+object tomasDerecha inherits ObjetoInvisible{
+	override method position() = game.at(tomas.position().x()+1, tomas.position().y())
 }
-object tomasAbajo{
-	method position() = game.at(tomas.position().x(), tomas.position().y()-1)
-	method posTomas() = game.at(tomas.position().x(), tomas.position().y())
+object tomasArriba inherits ObjetoInvisible{
+	override method position() = game.at(tomas.position().x(), tomas.position().y()+1)
+}
+object tomasAbajo inherits ObjetoInvisible{
+	override method position() = game.at(tomas.position().x(), tomas.position().y()-1)
 }
