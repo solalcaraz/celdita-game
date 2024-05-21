@@ -49,8 +49,9 @@ object tomas {
 		game.schedule(5000, { game.stop()})
 	}
 
-//Agarrar objetos
+//Uso de pociones
 	method tieneCapacidad() = mochila.size() < capacidad
+	
 		
 //Matar monstruos 
 	method atacar(posicion) {
