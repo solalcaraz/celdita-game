@@ -10,8 +10,5 @@ object espada {
 		self.desaparecer()
 	}
 	
-	method proximidadTomas(collider){
-		game.say(self, "Una espada!\nLevántala con 'n'.")
-	}
 	method desaparecer(){ game.removeVisual(self)}
 }

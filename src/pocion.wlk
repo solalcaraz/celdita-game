@@ -5,7 +5,7 @@ class Pociones{
 	var property position
 	var property tipoPocion
 
-	method image() = "tomas_" + tipoPocion + ".png"
+	method image() = "pocion_" + tipoPocion + ".png"
 //Aparicion de la pocion
 	method esEncontrado(personaje){
 		if(personaje.tieneCapacidad()){
@@ -18,7 +18,11 @@ class Pociones{
 		self.image()
 		game.schedule(3000, { =>self.desaparecer()})
 	}
-	method desaparecer(){ game.removeVisual(self)}	
+	method desaparecer(){ game.removeVisual(self)}
+	
+	method proximidadTomas(colisionador) {
+		game.say(self, "soy una pocion!")
+	}
 	
 	method activar(personaje){}
 }

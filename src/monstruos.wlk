@@ -7,12 +7,14 @@ class Monstruos {
 	var poderBase
 	var pocion
 	var property estado = "basico"
+	var esCaminable = false
 
 //Posicion e imagen para los monstruos en general
 	var property position
 	method image() = "monstruo1_" + estado + ".png"
 	method aparecer(){
 		position = game.at(0.randomUpTo(game.width()).truncate(0), 0.randomUpTo(game.height()).truncate(0))
+		game.addVisual(self)
 		self.movimiento()
 	}	
 	
@@ -26,6 +28,7 @@ class Monstruos {
 			game.schedule(1000, {self.atacar(colisionador.posTomas())})
 			game.schedule(1000, {self.continuarAtaque(colisionador)})
 		}
+		//onTick  ¨nombre¨ + objeto.identity().toString()
 	}
 	
 	method desaparecer(){ game.removeVisual(self)}

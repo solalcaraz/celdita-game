@@ -25,8 +25,6 @@ object config {
 		keyboard.d().onPressDo({ tomas.moverseA(tomas.position().right(1))})
 		keyboard.w().onPressDo({ tomas.moverseA(tomas.position().up(1))})
 		keyboard.s().onPressDo({ tomas.moverseA(tomas.position().down(1))})
-		//Para agarrar
-		keyboard.n().onPressDo({ tomas.agarrar()})
 		//Para atacar, REVISAR
 		keyboard.up().onPressDo({ tomas.atacar(tomasArriba)})
 		keyboard.down().onPressDo({ tomas.atacar(tomasAbajo)})
@@ -38,7 +36,7 @@ object config {
 //		keyboard.num3().onPressDo({ tomas.usarPocion(2)})
 	}
 	method configurarColision(){
-//		game.onCollideDo( tomas, { algo => algo.esEncontrado(tomas) })
+		game.onCollideDo( tomas, { algo => algo.esEncontrado(tomas) })
 		game.onCollideDo( tomasDerecha, { algo => algo.proximidadTomas(tomasDerecha) })
 		game.onCollideDo( tomasArriba, { algo => algo.proximidadTomas(tomasArriba) })
 		game.onCollideDo( tomasAbajo, { algo => algo.proximidadTomas(tomasAbajo) })
