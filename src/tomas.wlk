@@ -1,6 +1,4 @@
 import wollok.game.*
-//import monstruos.*
-//import pocion.*
 import extra.*
 
 object tomas {	
@@ -9,37 +7,36 @@ object tomas {
 	
 	var property vivo = true
 	var property vida = 100
-	var property estado = "basico"
+	var property estado = "Basico" 
+	var property nombre = "tomas"
 	
-	var property tieneEspada = false
 	var property poderBase = 10
-	
+	var property tieneEspada = false
 	var property esInvencible = false
 	
 //Configurar posicion e imagen
 	var property position = game.at(0, 4)
+	method image() = imagen.agregar(nombre, estado)
 	
-	method image() = "tomas_" + estado + ".png"
+	method puedeCaminarlo() = true
 	method estaEnTablero(posicion) = posicion.x().between(0, 19) and posicion.y().between(0, 9)
+	
 	//Verificar que el movimiento sea legal, que no haya obstaculos y que no ocupe el mismo lugar que el monstruo
 	method procesarMovimiento(){
-		
-		
-	}
 	
+	}
 	method moverseA(nuevaPosicion) {
 		if (self.estaEnTablero(nuevaPosicion) and vivo){
 			position = nuevaPosicion		
-		}
+		} else {self.error("No puede moverse")}
 	}
 	
 //Vida del personaje
 	method esAtacado(danio) {
-		estado = "herido"
-		game.schedule(80,{estado = "basico"}
-		)
+		estado = "Herido"
+		game.schedule(80,{estado = "Basico"})
 		vida -= danio 
-		if(vida <= 0) { self.morir()}
+		if(vida <= 0) { self.morir()} else self.error("Sigue vivo")
 	}
 	
 	method morir() {
@@ -52,23 +49,24 @@ object tomas {
 
 //Uso de pociones
 	method tieneCapacidad() = mochila.size() < capacidad
-	
+
+	method usarPocion(numero){
+		if (mochila.isNotEmpty()){
+			mochila.get(numero).activar()
+			mochila.remove(mochila.get(numero))
+		} else { game.say(self, "No tengo pocion")}
+	}
 		
 //Matar monstruos 
+	method cuantoDanio(colisionador, cuanto) = game.uniqueCollider(colisionador).recibirDanio(poderBase * cuanto) 
+	method daniar(colisionador) = if(tieneEspada){ self.cuantoDanio(colisionador, 1)} else { self.cuantoDanio(colisionador, 0.5)}
+	
 	method atacar(colisionador) {
 		if(not game.colliders(colisionador).isEmpty()){		
-			if(tieneEspada){
-				game.uniqueCollider(colisionador).recibirDanio(poderBase)
-			} else {
-				game.uniqueCollider(colisionador).recibirDanio(poderBase/2)
-			}		
-		}else {
-			game.say(self, "No hay nada que atacar!")
-		}
-		
+			self.daniar(colisionador)
+		} else { game.say(self, "No hay nada que atacar!")}	
 	}	
 }
-
 
 class ObjetoInvisible {
 	method position()

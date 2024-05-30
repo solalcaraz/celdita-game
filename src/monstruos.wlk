@@ -1,101 +1,108 @@
 import wollok.game.*
 import pocion.*
+import extra.*
+import tomas.*
 
-//dañan a tomas con esAtacado(daño)
 class Monstruos {
+	var property estado = "Basico"
+	var nombre
 	var vida
-	var poderBase
+	
 	var pocion
-	var property estado = "basico"
+	var poderBase
 	var esCaminable = false
 
 //Posicion e imagen para los monstruos en general
 	var property position
-	method image() = "monstruo1_" + estado + ".png"
+	method image() = imagen.agregar(nombre, estado)
 	method aparecer(){
 		position = game.at(0.randomUpTo(game.width()).truncate(0), 0.randomUpTo(game.height()).truncate(0))
 		game.addVisual(self)
-		self.movimiento()
+		return self.movimiento()
 	}	
-	
-	method proximidadTomas(colisionador){
-		game.schedule(1000, {self.atacar(colisionador.posTomas())})
-		game.schedule(1000, {self.continuarAtaque(colisionador)})
-	}
-	
-	method continuarAtaque(colisionador){
-		if(not game.colliders(colisionador).isEmpty() and game.uniqueCollider(colisionador).equals(self)){
-			game.schedule(1000, {self.atacar(colisionador.posTomas())})
-			game.schedule(1000, {self.continuarAtaque(colisionador)})
-		}
-		//onTick  ¨nombre¨ + objeto.identity().toString()
-	}
-	
 	method desaparecer(){ game.removeVisual(self)}
 	
-//Vida del monstruo
-	method recibirDanio(danio){
-		estado = "herido"
-		game.schedule(50,{estado = "basico"})
-		vida -= danio
-		if(vida <= 0){ self.morir()}
-	}
-	
-	method morir() {	
-		self.desaparecer()
-		self.soltarPocion()
-	}
-	
-	method soltarPocion(){
-		game.addVisual(pocion)
-	}
+//Validaciones
+	method movimiento() = game.onTick(2000, "movimientoMonstruo", { => self.moverse()})
+	method detenerse() = game.removeTickEvent("movimientoMonstruo")
+	method validacion(colisionador) = not game.colliders(colisionador).isEmpty() and game.uniqueCollider(colisionador).equals(self)
 
-//Acciones independientes para cada tipo
+//Acercamiento con tomas, ataca si esta cerca
+	method logicaAtaque(colisionador) {
+		game.schedule(1000, {self.atacar(colisionador.posTomas())})
+		game.schedule(1000, {self.continuarAtaque(colisionador)})		
+	}
+	
+	method proximidadTomas(colisionador){
+		self.detenerse()
+		self.logicaAtaque(colisionador)
+	}
+	method continuarAtaque(colisionador){
+		if(self.validacion(colisionador)){
+			self.logicaAtaque(colisionador)
+		} else { self.movimiento()}
+	}
 	method atacar(posicion){
-		//if(si esta activa la pocion de aturdimiento){ no ataca el monstruo }
 		if(not game.getObjectsIn(posicion).isEmpty()){
 			game.getObjectsIn(posicion).first().esAtacado(poderBase)
 		}
 	}
 	
-	method movimiento(){}
-}
-
-class Sombrio inherits Monstruos(vida = 100, poderBase = 10, pocion = "invisibilidad") {
-	override method morir(){
-		if (0.randomUpTo(3) == 0){
-			self.soltarPocion()
-		} else {
-			self.desaparecer()
-		}
+//Vida del monstruo
+	method recibirDanio(danio){
+		estado = "Herido"
+		game.schedule(50,{estado = "Basico"})
+		vida -= danio
+		if(vida <= 0){ self.morir()} else { self.error("Sigue vivo")}
 	}
-	method moverse(){
-		//se mueve tipo caballo de ajedrez o algo asi, estilo "se teletransporta"
-	}
-}
-
-class Golem inherits Monstruos(vida = 80, poderBase = 8, pocion = "aturdimiento") {
-	override method morir(){
-		if (0.randomUpTo(2) == 0){
-			self.soltarPocion()
+	
+	method morir() {
+		if(self.aleatorio()){
+			self.soltarPocion()			
 		} else { 
+			self.detenerse()
 			self.desaparecer()
+		}	
+	}
+	method aleatorio()
+	method soltarPocion(){ game.addVisualIn(pocion, position)}
+
+//Independientes para cada tipo
+	method moverse()
+}
+
+class Sombrio inherits Monstruos(vida = 100, poderBase = 10, pocion = "invisibilidad", nombre = "sombrio") {
+	override method aleatorio() = (0.randomUpTo(3).truncate(0) == 1)
+		
+	override method moverse(){
+		if (0.randomUpTo(2).truncate(0) == 1){
+			position = self.position().left(2)
+			position = self.position().up(1)
+		} else {
+			position = self.position().left(2)
+			position = self.position().down(1)
 		}
 	}
-	method moverse(){
-		//se puede mover en y igual que el personaje pero en x va avanzando
+}
+
+class Slime inherits Monstruos(vida = 80, poderBase = 8, pocion = "aturdimiento", nombre = "slime") {
+
+	override method aleatorio() = (0.randomUpTo(2).truncate(0) == 1)
+	
+	override method moverse(){
+		if(self.position().y() > tomas.position().y()){
+			position = self.position().down(1)
+		} else {
+			position = self.position().up(1)
+		}
 	}
 }
 
 class Esqueleto inherits Monstruos(vida = 50, poderBase = 5, pocion = "fuerza") {
-	override method morir(){
-		if (0.randomUpTo(3) != 0){
-			self.soltarPocion()
-		} else {
-			self.desaparecer()
-		}
-	}
-	method moverse(){
+	
+	override method aleatorio() = (0.randomUpTo(3).truncate(0) != 1)
+	
+	override method moverse(){
 		//pensar
 	}
 }

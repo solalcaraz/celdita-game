@@ -12,3 +12,7 @@ object espada {
 	
 	method desaparecer(){ game.removeVisual(self)}
 }
+
+object imagen {
+	method agregar(personaje, estado) = personaje + estado + ".png"
+}

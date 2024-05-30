@@ -1,18 +1,14 @@
 import wollok.game.*
 import monstruos.*
+import extra.*
 
 class Pociones{
 	var property position
-	var property tipoPocion
+	var tipoPocion
+	const nombre = "pocion_"
 
-	method image() = "pocion_" + tipoPocion + ".png"
 //Aparicion de la pocion
-	method esEncontrado(personaje){
-		if(personaje.tieneCapacidad()){
-			personaje.mochila().add(game.uniqueCollider(personaje))
-		} else { game.say(self, "No puedo cargar más")}
-		self.desaparecer()
-	}
+	method image() = imagen.agregar(nombre, tipoPocion)
 	method aparecer(posicionMonstruo) {
 		position = posicionMonstruo
 		self.image()
@@ -20,26 +16,31 @@ class Pociones{
 	}
 	method desaparecer(){ game.removeVisual(self)}
 	
+//Colision con el personaje
+	method esEncontrado(personaje){
+		if(personaje.tieneCapacidad()){
+			personaje.mochila().add(game.uniqueCollider(personaje))
+		} else { game.say(self, "No puedo cargar más")}
+		self.desaparecer()
+	}
 	method proximidadTomas(colisionador) {
-		game.say(self, "soy una pocion!")
+		game.say(self, "Soy una pocion!")
 	}
 	
-	method activar(personaje){}
+	method activar(personaje)
 }
 
 class PocionInvencible inherits Pociones (tipoPocion = "invencible") {
-//Poder que activa la pocion en el personaje
 	 override method activar(personaje){
 		personaje.vida(100)
 		personaje.estado("invisible")
 		personaje.esInvencible(true)
-		game.schedule(5000, {personaje.estado("basico") 
+		game.schedule(5000, {personaje.estado("Basico") 
 							personaje.esInvencible(false)})
 	 }
 }
 
 class PocionFuerza inherits Pociones (tipoPocion = "fuerza") {
-//Poder que activa la pocion en el personaje
 	 override method activar(personaje){
 	 	personaje.poderBase(20)
 		game.schedule(5000, { personaje.poderBase(10)})
@@ -47,7 +48,6 @@ class PocionFuerza inherits Pociones (tipoPocion = "fuerza") {
 }
 
 class PocionAturdimiento inherits Pociones (tipoPocion = "aturdimiento") {
-//Poder que activa la pocion en el personaje
 	 override method activar(personaje){
 		//a pensar mas adelante
 	}
