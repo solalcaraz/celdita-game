@@ -6,14 +6,17 @@ class Pociones{
 	var property position
 	var tipoPocion
 	const nombre = "pocion_"
+	var property esCaminable = true
 
 //Aparicion de la pocion
 	method image() = imagen.agregar(nombre, tipoPocion)
+	
 	method aparecer(posicionMonstruo) {
 		position = posicionMonstruo
 		self.image()
 		game.schedule(3000, { =>self.desaparecer()})
 	}
+	
 	method desaparecer(){ game.removeVisual(self)}
 	
 //Colision con el personaje
@@ -23,6 +26,7 @@ class Pociones{
 		} else { game.say(self, "No puedo cargar más")}
 		self.desaparecer()
 	}
+	
 	method proximidadTomas(colisionador) {
 		game.say(self, "Soy una pocion!")
 	}
@@ -49,6 +53,6 @@ class PocionFuerza inherits Pociones (tipoPocion = "fuerza") {
 
 class PocionAturdimiento inherits Pociones (tipoPocion = "aturdimiento") {
 	 override method activar(personaje){
-		//a pensar mas adelante
+		//
 	}
 }

@@ -18,16 +18,19 @@ object tomas {
 	var property position = game.at(0, 4)
 	method image() = imagen.agregar(nombre, estado)
 	
-	method puedeCaminarlo() = true
 	method estaEnTablero(posicion) = posicion.x().between(0, 19) and posicion.y().between(0, 9)
 	
-	//Verificar que el movimiento sea legal, que no haya obstaculos y que no ocupe el mismo lugar que el monstruo
-	method procesarMovimiento(){
+	//Verificar el movimiento y moverse
+	method procesarMovimiento(colisionador) {
+		if(game.uniqueCollider(colisionador).esCaminable()){
+			position = colisionador.position()
+		}	
+	} 
 	
-	}
-	method moverseA(nuevaPosicion) {
-		if (self.estaEnTablero(nuevaPosicion) and vivo){
-			position = nuevaPosicion		
+	method moverseA(colisionador) {
+		if (self.estaEnTablero(colisionador.position() and vivo)){
+			game.whenCollideDo(colisionador, { => self.procesarMovimiento(colisionador)})
+			position = colisionador.position()
 		} else {self.error("No puede moverse")}
 	}
 	

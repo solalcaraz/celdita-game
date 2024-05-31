@@ -10,16 +10,18 @@ class Monstruos {
 	
 	var pocion
 	var poderBase
-	var esCaminable = false
+	var property esCaminable = false
 
 //Posicion e imagen para los monstruos en general
-	var property position
+	var property position = game.origin()
 	method image() = imagen.agregar(nombre, estado)
+	
 	method aparecer(){
 		position = game.at(0.randomUpTo(game.width()).truncate(0), 0.randomUpTo(game.height()).truncate(0))
 		game.addVisual(self)
 		return self.movimiento()
 	}	
+	
 	method desaparecer(){ game.removeVisual(self)}
 	
 //Validaciones
@@ -37,11 +39,13 @@ class Monstruos {
 		self.detenerse()
 		self.logicaAtaque(colisionador)
 	}
+	
 	method continuarAtaque(colisionador){
 		if(self.validacion(colisionador)){
 			self.logicaAtaque(colisionador)
 		} else { self.movimiento()}
 	}
+	
 	method atacar(posicion){
 		if(not game.getObjectsIn(posicion).isEmpty()){
 			game.getObjectsIn(posicion).first().esAtacado(poderBase)
@@ -64,6 +68,7 @@ class Monstruos {
 			self.desaparecer()
 		}	
 	}
+	
 	method aleatorio()
 	method soltarPocion(){ game.addVisualIn(pocion, position)}
 
@@ -98,7 +103,7 @@ class Slime inherits Monstruos(vida = 80, poderBase = 8, pocion = "aturdimiento"
 	}
 }
 
-class Esqueleto inherits Monstruos(vida = 50, poderBase = 5, pocion = "fuerza") {
+class Esqueleto inherits Monstruos(vida = 50, poderBase = 5, pocion = "fuerza", nombre = "esqueleto") {
 	
 	override method aleatorio() = (0.randomUpTo(3).truncate(0) != 1)
 	
