@@ -7,6 +7,7 @@ object espada {
 	
 	method image() = "espada.png"
 	
+	method proximidadTomas(m){}
 	method esEncontrado(personaje) {
 		personaje.tieneEspada(true)
 		self.desaparecer()
@@ -29,6 +30,6 @@ object explicacion{
 	var property position = game.origin()
 }
 object fondo{
-	var property image = "fondo_bosque.jpg"
+	var property image = "fondo_bosque.png"
 	var property position = game.origin()
 }

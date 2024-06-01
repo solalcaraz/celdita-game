@@ -35,6 +35,7 @@ class Monstruos {
 		game.schedule(1000, {self.continuarAtaque(colisionador)})		
 	}
 	
+	method esEncontrado(personaje){}
 	method proximidadTomas(colisionador){
 		self.detenerse()
 		self.logicaAtaque(colisionador)
@@ -61,12 +62,9 @@ class Monstruos {
 	}
 	
 	method morir() {
-		if(self.aleatorio()){
-			self.soltarPocion()			
-		} else { 
-			self.detenerse()
-			self.desaparecer()
-		}	
+		if(self.aleatorio()){ self.soltarPocion()	} 
+		self.detenerse()
+		self.desaparecer()	
 	}
 	
 	method aleatorio()
@@ -108,6 +106,10 @@ class Esqueleto inherits Monstruos(vida = 50, poderBase = 5, pocion = "fuerza", 
 	override method aleatorio() = (0.randomUpTo(3).truncate(0) != 1)
 	
 	override method moverse(){
-		//pensar
+		if(self.position().x() > tomas.position().x()){
+			position = self.position().down(1)
+		} else {
+			position = self.position().up(1)
+		}
 	}
 }

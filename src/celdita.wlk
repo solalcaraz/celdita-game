@@ -7,7 +7,7 @@ import monstruos.*
 object celdita {
 	method iniciar() {
 		game.title("Celdita")
-		game.height(10)
+		game.height(11)
 		game.width(20)
 		game.addVisual(menu)
 		keyboard.enter().onPressDo{ self.explicar()}
@@ -66,14 +66,10 @@ object config {
 }
 
 object enemigos{
-	const slime = new Slime()
-	const sombrio = new Sombrio()
-	const esqueleto = new Esqueleto()
-	
 	method valorRan() = 0.randomUpTo(3).truncate(0)
 	method generar(){
-		if(self.valorRan() == 1){ slime.aparecer()
-		} else if(self.valorRan() == 2){ sombrio.aparecer()
-		} else if(self.valorRan() == 3){ esqueleto.aparecer() }
+		if(self.valorRan() == 1){ new Slime().aparecer()
+		} else if(self.valorRan() == 2){ new Sombrio().aparecer()
+		} else if(self.valorRan() == 0){ new Esqueleto().aparecer() }
 	}
 }

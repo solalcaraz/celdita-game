@@ -31,6 +31,8 @@ class Pociones{
 		game.say(self, "Soy una pocion!")
 	}
 	
+	method recibirDanio()
+	
 	method activar(personaje)
 }
 
@@ -52,7 +54,8 @@ class PocionFuerza inherits Pociones (tipoPocion = "fuerza") {
 }
 
 class PocionAturdimiento inherits Pociones (tipoPocion = "aturdimiento") {
-	 override method activar(personaje){
-		//
-	}
+	override method activar(personaje){
+	 	personaje.poderBase(20)
+		game.schedule(5000, { personaje.poderBase(10)})
+	 }
 }

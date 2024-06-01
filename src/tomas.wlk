@@ -22,16 +22,15 @@ object tomas {
 	
 	//Verificar el movimiento y moverse
 	method procesarMovimiento(colisionador) {
-		if(game.uniqueCollider(colisionador).esCaminable()){
-			position = colisionador.position()
-		}	
+		if(game.colliders(colisionador).isEmpty() and self.estaEnTablero(colisionador.position())){
+			return true
+		} else { return game.uniqueCollider(colisionador).esCaminable()	}
 	} 
 	
 	method moverseA(colisionador) {
-		if (self.estaEnTablero(colisionador.position() and vivo)){
-			game.whenCollideDo(colisionador, { => self.procesarMovimiento(colisionador)})
+		if(self.procesarMovimiento(colisionador) and vivo){
 			position = colisionador.position()
-		} else {self.error("No puede moverse")}
+		} else { game.say(self, "Por aca no puedo ir")}
 	}
 	
 //Vida del personaje
