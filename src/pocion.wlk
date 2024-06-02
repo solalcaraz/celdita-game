@@ -1,18 +1,21 @@
 import wollok.game.*
 import monstruos.*
 import extra.*
+import visuales.*
+import sonidos.*
 
 class Pociones{
 	var property position
-	var tipoPocion
+
 	const nombre = "pocion_"
+	var tipoPocion
+
 	var property esCaminable = true
 
 //Aparicion de la pocion
 	method image() = imagen.agregar(nombre, tipoPocion)
 	
-	method aparecer(posicionMonstruo) {
-		position = posicionMonstruo
+	method aparecer() {
 		self.image()
 		game.schedule(3000, { =>self.desaparecer()})
 	}
@@ -23,6 +26,7 @@ class Pociones{
 	method esEncontrado(personaje){
 		if(personaje.tieneCapacidad()){
 			personaje.mochila().add(game.uniqueCollider(personaje))
+			//pociones.actualizar()
 		} else { game.say(self, "No puedo cargar más")}
 		self.desaparecer()
 	}
@@ -31,8 +35,9 @@ class Pociones{
 		game.say(self, "Soy una pocion!")
 	}
 	
-	method recibirDanio()
+	method recibirDanio(){}
 	
+// Propio de cada tipo
 	method activar(personaje)
 }
 

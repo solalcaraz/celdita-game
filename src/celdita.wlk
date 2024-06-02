@@ -1,17 +1,20 @@
 import wollok.game.*
 import tomas.*
-import pocion.*
+import configuraciones.*
+import combate.*
 import extra.*
-import monstruos.*
+import visuales.*
+import sonidos.*
 
 object celdita {
-	method iniciar() {
+	method configuracionInicial() {
 		game.title("Celdita")
 		game.height(11)
 		game.width(20)
 		game.addVisual(menu)
+		game.schedule(500, { => inicio.play() inicio.volume(0.2)})
 		keyboard.enter().onPressDo{ self.explicar()}
-	}
+	}	
 	
 	method explicar() {
 		game.clear()
@@ -20,56 +23,33 @@ object celdita {
 	}
 	
 	method configurar() {
+		inicio.volume(0.2)
 		game.clear()
 		game.addVisual(fondo)
-
+		
 		//Visuales
-		game.addVisual(espada)
 		game.addVisual(tomas)
 		game.addVisual(tomasIzquierda)
 		game.addVisual(tomasDerecha)
 		game.addVisual(tomasArriba)
 		game.addVisual(tomasAbajo)
-		//Configuraciones
+		game.addVisual(espada)
+		game.schedule(1000, { => espada.aparecer()})
+		game.addVisual(vidaCorazon)
+		
+		//Inicio
 		config.configurarTeclas()
 		config.configurarColision()
-		game.onTick(2000, "generarEnemigos", { => enemigos.generar()})
-		
+		game.showAttributes(tomas)
+		game.schedule(15000,{ new Combate().iniciar()})
+	}
+	
+	method reiniciar(){
+		game.clear()
+		game.addVisual(perdiste)
+		batalla.pause()
+		game.clear()
+		game.schedule(5000, { self.configuracionInicial()})
+		tomas.vida(100)
 	}	
-}
-
-object config {
-	method configurarTeclas() {
-		keyboard.a().onPressDo({ tomas.moverseA(tomasIzquierda)})
-		keyboard.d().onPressDo({ tomas.moverseA(tomasDerecha)})
-		keyboard.w().onPressDo({ tomas.moverseA(tomasArriba)})
-		keyboard.s().onPressDo({ tomas.moverseA(tomasAbajo)})
-		
-		//Para atacar
-		keyboard.up().onPressDo({ tomas.atacar(tomasArriba)})
-		keyboard.down().onPressDo({ tomas.atacar(tomasAbajo)})
-		keyboard.left().onPressDo({ tomas.atacar(tomasIzquierda)})
-		keyboard.right().onPressDo({ tomas.atacar(tomasDerecha)})
-		
-		//Para usar las pociones
-		keyboard.num1().onPressDo({ tomas.usarPocion(0)})
-		keyboard.num2().onPressDo({ tomas.usarPocion(1)})
-		keyboard.num3().onPressDo({ tomas.usarPocion(2)})
-	}
-	method configurarColision(){
-		game.onCollideDo( tomas, { algo => algo.esEncontrado(tomas) })
-		game.onCollideDo( tomasDerecha, { algo => algo.proximidadTomas(tomasDerecha) })
-		game.onCollideDo( tomasArriba, { algo => algo.proximidadTomas(tomasArriba) })
-		game.onCollideDo( tomasAbajo, { algo => algo.proximidadTomas(tomasAbajo) })
-		game.onCollideDo( tomasIzquierda, { algo => algo.esEncontrado(tomasIzquierda) })
-	}
-}
-
-object enemigos{
-	method valorRan() = 0.randomUpTo(3).truncate(0)
-	method generar(){
-		if(self.valorRan() == 1){ new Slime().aparecer()
-		} else if(self.valorRan() == 2){ new Sombrio().aparecer()
-		} else if(self.valorRan() == 0){ new Esqueleto().aparecer() }
-	}
 }

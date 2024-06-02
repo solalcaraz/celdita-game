@@ -1,5 +1,8 @@
 import wollok.game.*
+import celdita.*
 import extra.*
+import visuales.*
+import sonidos.*
 
 object tomas {	
 	var property mochila = []
@@ -7,28 +10,35 @@ object tomas {
 	
 	var property vivo = true
 	var property vida = 100
-	var property estado = "Basico" 
-	var property nombre = "tomas"
-	
+		
 	var property poderBase = 10
 	var property tieneEspada = false
 	var property esInvencible = false
 	
-//Configurar posicion e imagen
+	var property estado = "Basico" 
+	var property nombre = "tomas"
 	var property position = game.at(0, 4)
+	
+//Configurar imagen y sonido
 	method image() = imagen.agregar(nombre, estado)
+	method sonido(nuevo) { sonidos.nuevoSonido(nuevo)}
 	
-	method estaEnTablero(posicion) = posicion.x().between(0, 19) and posicion.y().between(0, 9)
-	
-	//Verificar el movimiento y moverse
+//Validaciones de movimiento
+	method estaEnTablero(posicion) = posicion.x().between(0, 19) and posicion.y().between(0, 10)
+	method visualMochila(posicion) = posicion.between([17,10], [19, 10])
+	method validacion(colisionador) = game.colliders(colisionador).isEmpty() 
+									and self.estaEnTablero(colisionador.position()) 
+									//and self.visualMochila(colisionador.position())
+
 	method procesarMovimiento(colisionador) {
-		if(game.colliders(colisionador).isEmpty() and self.estaEnTablero(colisionador.position())){
+		if(self.validacion(colisionador)){
 			return true
 		} else { return game.uniqueCollider(colisionador).esCaminable()	}
 	} 
 	
 	method moverseA(colisionador) {
 		if(self.procesarMovimiento(colisionador) and vivo){
+			sonidos.nuevoSonido("pasos.mp3")
 			position = colisionador.position()
 		} else { game.say(self, "Por aca no puedo ir")}
 	}
@@ -36,53 +46,37 @@ object tomas {
 //Vida del personaje
 	method esAtacado(danio) {
 		estado = "Herido"
-		game.schedule(80,{estado = "Basico"})
+		game.schedule(80,{estado = "Basico" 
+						self.sonido("herido.mp3") })
 		vida -= danio 
-		if(vida <= 0) { self.morir()} else self.error("Sigue vivo")
+		game.say(self, "vida"+ vida.toString())
+		vidaCorazon.actualizar(vida)
+		if(vida <= 0) { self.morir()} 
 	}
 	
 	method morir() {
 		vivo = false
+		self.sonido("muere.mp3")
 		game.say(self, "Has muerto!")
-		game.removeVisual(self)
-		//Podriamos volver al menu en vez de frenar el juego
-		game.schedule(5000, { game.stop()})
+		celdita.reiniciar()
+	}
+		
+//Matar monstruos 
+	method atacar(colisionador) {
+		if(not game.colliders(colisionador).isEmpty()){		
+			if(tieneEspada){ self.sonido("golpeEspada.mp3")} else { self.sonido("golpeMano.mp3")}
+			game.uniqueCollider(colisionador).recibirDanio(poderBase)
+		} else { game.say(self, "No hay nada que atacar!")}	
 	}
 
 //Uso de pociones
 	method tieneCapacidad() = mochila.size() < capacidad
 
 	method usarPocion(numero){
-		if (mochila.isNotEmpty()){
+		if (not mochila.isEmpty()){
 			mochila.get(numero).activar()
+			self.sonido("beber.mp3")
 			mochila.remove(mochila.get(numero))
 		} else { game.say(self, "No tengo pocion")}
-	}
-		
-//Matar monstruos 
-	method cuantoDanio(colisionador, cuanto) = game.uniqueCollider(colisionador).recibirDanio(poderBase * cuanto) 
-	method daniar(colisionador) = if(tieneEspada){ self.cuantoDanio(colisionador, 1)} else { self.cuantoDanio(colisionador, 0.5)}
-	
-	method atacar(colisionador) {
-		if(not game.colliders(colisionador).isEmpty()){		
-			self.daniar(colisionador)
-		} else { game.say(self, "No hay nada que atacar!")}	
 	}	
-}
-
-class ObjetoInvisible {
-	method position()
-	method posTomas() = game.at(tomas.position().x(), tomas.position().y())
-}
-object tomasIzquierda inherits ObjetoInvisible {
-	override method position() = game.at(tomas.position().x()-1, tomas.position().y())
-}
-object tomasDerecha inherits ObjetoInvisible{
-	override method position() = game.at(tomas.position().x()+1, tomas.position().y())
-}
-object tomasArriba inherits ObjetoInvisible{
-	override method position() = game.at(tomas.position().x(), tomas.position().y()+1)
-}
-object tomasAbajo inherits ObjetoInvisible{
-	override method position() = game.at(tomas.position().x(), tomas.position().y()-1)
 }

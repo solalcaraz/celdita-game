@@ -2,6 +2,6 @@ import wollok.game.*
 import celdita.*
 
 program celditaGame {
-	celdita.iniciar()
+	celdita.configuracionInicial()
 	game.start()
 }
