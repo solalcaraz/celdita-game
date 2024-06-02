@@ -77,7 +77,7 @@ class Monstruos {
 	}
 	
 //Independientes para cada tipo
-	method aleatorio() = (0.randomUpTo(1).truncate(0) == 1)
+	method aleatorio() = (0.randomUpTo(2).truncate(0) != 1)
 	method soltarPocion() { pocion.aparecer(position)}
 	method moverse()
 }

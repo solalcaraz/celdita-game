@@ -5,6 +5,7 @@ import sonidos.*
 
 //Objetos invisibles para validad el movimiento/ataque del personaje
 class ObjetoInvisible {
+	var property esMalo = false
 	method position()
 	method posTomas() = game.at(tomas.position().x(), tomas.position().y())
 }

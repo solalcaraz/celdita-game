@@ -33,7 +33,7 @@ object ganaste inherits Visuales(nombre = "ganaste", position = game.origin()){
 		keyboard.enter().onPressDo{ ganar.pause() game.stop()}
 	}
 }	
-object perdiste inherits Visuales(nombre = "perdiste", position = game.center()){
+object perdiste inherits Visuales(nombre = "perdiste", position = game.origin()){
 	method resetearValores(){
 		perder.play()
 		tomas.mochila([])

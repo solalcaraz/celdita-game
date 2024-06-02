@@ -101,7 +101,7 @@ object tomas {
 		if (mochila.isEmpty()){
 			game.say(self, "No tengo pocion")
 		} else {
-			mochila.first().activar()
+			mochila.first().activar(self)
 			self.sonido("beber.mp3")
 			mochila.remove(mochila.first())
 		}		
