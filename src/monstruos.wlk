@@ -11,8 +11,10 @@ class Monstruos {
 	var sonidoDe
 	var property estado = "Basico"
 	
+	var pocion
 	var poderBase
 	var property esCaminable = false
+	var property esMalo = true
 
 //Configuracion de imagen, sonido y posicion
 	var property position = game.origin()
@@ -28,9 +30,9 @@ class Monstruos {
 	method desaparecer(){ game.removeVisual(self)}
 	
 //Validaciones
-	method movimiento() = game.onTick(3000, "movimiento", { => self.moverse()})
+	method movimiento() = game.onTick(2500, "movimiento", { => self.moverse()})
 	method detenerse() = game.removeTickEvent("movimiento")
-	method validacion(colisionador) = not game.colliders(colisionador).isEmpty() //and game.uniqueCollider(colisionador).equals(self)
+	method validacion(colisionador) = not game.colliders(colisionador).isEmpty() and game.uniqueCollider(colisionador).equals(self)
 
 //Acercamiento con tomas y ataque
 	method logicaAtaque(colisionador) {
@@ -59,9 +61,9 @@ class Monstruos {
 	
 //Vida del monstruo y muerte
 	method recibirDanio(danio){
+		vida -= danio
 		estado = "Herido"
 		game.schedule(50,{estado = "Basico" self.sonido()})
-		vida -= danio
 		if(vida <= 0){ self.morir()} else { self.error("Sigue vivo")}
 	}
 	
@@ -69,20 +71,20 @@ class Monstruos {
 		self.detenerse()
 		sonidos.nuevoSonido("muerteMonst.mp3")
 		self.desaparecer()	
-		if(self.aleatorio()){ self.soltarPocion()}
+		//if(self.aleatorio()){ self.soltarPocion()}
+		self.soltarPocion()
+		tomas.actualizarPuntaje()
 	}
 	
 //Independientes para cada tipo
-	method aleatorio()
-	method soltarPocion()
+	method aleatorio() = (0.randomUpTo(1).truncate(0) == 1)
+	method soltarPocion() { pocion.aparecer(position)}
 	method moverse()
 }
 
-class Sombrio inherits Monstruos(vida = 100, poderBase = 10, nombre = "sombrio", sonidoDe = "sombrioHerido.mp3") {
-	override method aleatorio() = (0.randomUpTo(3).truncate(0) == 1)
+class Sombrio inherits Monstruos(vida = 100, poderBase = 10, pocion = new PocionAturdimiento(), nombre = "sombrio", sonidoDe = "sombrioHerido.mp3") {
+	//override method aleatorio() = (0.randomUpTo(3).truncate(0) == 1)
 
-	override method soltarPocion() = new PocionInvencible(position = position).aparecer()
-		
 	override method moverse(){
 		if (0.randomUpTo(2).truncate(0) == 1){
 			position = self.position().left(2)
@@ -94,10 +96,8 @@ class Sombrio inherits Monstruos(vida = 100, poderBase = 10, nombre = "sombrio",
 	}
 }
 
-class Slime inherits Monstruos(vida = 80, poderBase = 8, nombre = "slime", sonidoDe = "slimeHerido.mp3") {
-	override method aleatorio() = (0.randomUpTo(2).truncate(0) == 1)
-	
-	override method soltarPocion() = new PocionAturdimiento(position = position).aparecer()
+class Slime inherits Monstruos(vida = 80, poderBase = 8, pocion = new PocionInvencible(), nombre = "slime", sonidoDe = "slimeHerido.mp3") {
+	//override method aleatorio() = (0.randomUpTo(2).truncate(0) == 1)
 	
 	override method moverse(){
 		if(self.position().y() > tomas.position().y()){
@@ -108,10 +108,8 @@ class Slime inherits Monstruos(vida = 80, poderBase = 8, nombre = "slime", sonid
 	}
 }
 
-class Esqueleto inherits Monstruos(vida = 50, poderBase = 5, nombre = "esqueleto", sonidoDe = "esqueletoHerido.mp3") {
-	override method aleatorio() = (0.randomUpTo(3).truncate(0) != 1)
-	
-	override method soltarPocion() = new PocionFuerza(position = position).aparecer()
+class Esqueleto inherits Monstruos(vida = 50, poderBase = 5, pocion = new PocionFuerza(), nombre = "esqueleto", sonidoDe = "esqueletoHerido.mp3") {
+	//override method aleatorio() = (0.randomUpTo(3).truncate(0) != 1)
 	
 	override method moverse(){
 		if(self.position().x() > tomas.position().x()){

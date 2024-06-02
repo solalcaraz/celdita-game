@@ -36,20 +36,11 @@ object celdita {
 		game.addVisual(espada)
 		game.schedule(1000, { => espada.aparecer()})
 		game.addVisual(vidaCorazon)
+		game.addVisual(puntajeTotal)
 		
 		//Inicio
 		config.configurarTeclas()
 		config.configurarColision()
-		game.showAttributes(tomas)
-		game.schedule(15000,{ new Combate().iniciar()})
-	}
-	
-	method reiniciar(){
-		game.clear()
-		game.addVisual(perdiste)
-		batalla.pause()
-		game.clear()
-		game.schedule(5000, { self.configuracionInicial()})
-		tomas.vida(100)
+		game.schedule(8000,{ new Combate().iniciar()})
 	}	
 }

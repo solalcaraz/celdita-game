@@ -28,17 +28,21 @@ object espada {
 	
 	const property poderBase = 10
 	var property esCaminable = false
+	var property esMalo = false
 	
-	const property position = game.center()
-
+//Configuracion de la posicion y la imagen
+	var property position = game.at(self.valorRan(18), self.valorRan(9))
+	
+	method valorRan(num) = 5.randomUpTo(num).truncate(0)
 	method image() = imagen.agregar(nombre, estado)
 	
 //Aparece una estatua que se convierte en espada
 	method aparecer(){
 		game.schedule(1000,{ game.say(self, "Tomas, valiente caballero")})
-		game.schedule(3000,{ game.say(self, "Necesitaras aumentar tu poder")})
-		game.schedule(5000,{ game.say(self, "Usame como espada...")})
-		game.schedule(7000,{ self.remover()})
+		game.schedule(3000,{ game.say(self, "Derrota 15 monstruos")})
+		game.schedule(5000,{ game.say(self, "Necesitaras aumentar tu poder")})
+		game.schedule(7000,{ game.say(self, "Usame como espada...")})
+		game.schedule(9000,{ self.remover()})
 	}
 	
 	method remover(){
@@ -62,4 +66,15 @@ object espada {
 	
 	method proximidadTomas(personaje){ game.say(self, "Agarrame")}
 	method recibirDanio(danio){}
+}
+
+object puntajeTotal{
+	var puntaje = 0
+	
+	method position() = game.at(17, 10)
+	
+	method text() = "Puntaje Total:"+ puntaje
+	method textColor() = "00000001"
+	
+	method mostrar(puntos) { puntaje = puntos}
 }

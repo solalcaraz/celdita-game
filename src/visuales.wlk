@@ -1,5 +1,7 @@
 import wollok.game.*
 import tomas.*
+import celdita.*
+import sonidos.*
 
 //Metodo para colocar una imagen
 object imagen {
@@ -9,8 +11,10 @@ object imagen {
 //Visuales de la pantalla
 class Visuales{
 	var nombre
-	var property position
 	const property esCaminable = true
+	const property esMalo = false
+
+	var property position
 	var property estado = "Inicial"
 	var property image = imagen.agregar(nombre, estado)
 	
@@ -22,14 +26,29 @@ class Visuales{
 object menu inherits Visuales (nombre = "menu", position = game.origin()){}
 object explicacion inherits Visuales (nombre = "explicacion", position = game.origin()){}
 object fondo inherits Visuales (nombre = "bosque", position = game.origin()){}
-object perdiste inherits Visuales(nombre = "gameOver", position = game.center()){}
-object combate inherits Visuales(nombre = "combate", position = game.center()){}
 
+object ganaste inherits Visuales(nombre = "ganaste", position = game.origin()){
+	method salir(){ 
+		ganar.play() 
+		keyboard.enter().onPressDo{ ganar.pause() game.stop()}
+	}
+}	
+object perdiste inherits Visuales(nombre = "perdiste", position = game.center()){
+	method resetearValores(){
+		perder.play()
+		tomas.mochila([])
+		tomas.vivo(true)
+		tomas.vida(100)
+		tomas.poderBase(10)
+	 	tomas.tieneEspada(false)
+		tomas.esInvencible(false)
+		tomas.puntaje(0)		
+		keyboard.enter().onPressDo{ game.clear() perder.pause() celdita.configuracionInicial()}
+	}
+}
 
 // Visual de la vida, que al tener mas
 object vidaCorazon inherits Visuales (nombre = "corazones_", estado = "3", position = game.at(17, 0)){	
-	var vida = tomas.vida()
-	
 	method actualizar(vidaTomas){
 		if (vidaTomas  == 0){
 			game.removeVisual(self)
@@ -38,15 +57,5 @@ object vidaCorazon inherits Visuales (nombre = "corazones_", estado = "3", posit
 		} else if (vidaTomas <= 60){
 			estado = "2"
 		} else { estado = "3"}
-	}
-}
-
-object pociones inherits Visuales (nombre = "pocion", position = game.at(17, 10)){
-	method posicion(n) = tomas.mochila().get(n)
-	
-	method actualizar(){
-		game.addVisualIn(self.posicion(1), position)
-		game.addVisualIn(self.posicion(2), position.x()+1)
-		game.addVisualIn(self.posicion(3), position.x()+2)
 	}
 }
