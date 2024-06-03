@@ -15,7 +15,7 @@
 ## Reglas de Juego / Instrucciones
 
 - Para moverte deberas usar: WASD
-- Para atacar los monstruos tendras que posicionarte al lado del mismo y usar: FLECHAS
+- Para atacar a los monstruos tendras que posicionarte al lado del mismo y usar: FLECHAS
 - Solo podras llevar 3 pociones en tu mochila y para activarlas usar: P
 
 
