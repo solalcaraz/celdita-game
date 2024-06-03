@@ -19,10 +19,10 @@ object config {
 		keyboard.p().onPressDo({ tomas.usarPocion()})
 	}
 	method configurarColision(){
-		game.onCollideDo( tomas, { algo => algo.esEncontrado(tomas) })
+		game.onCollideDo( tomas, { algo => algo.esEncontrado() })
 		game.onCollideDo( tomasDerecha, { algo => algo.proximidadTomas(tomasDerecha) })
 		game.onCollideDo( tomasArriba, { algo => algo.proximidadTomas(tomasArriba) })
 		game.onCollideDo( tomasAbajo, { algo => algo.proximidadTomas(tomasAbajo) })
-		game.onCollideDo( tomasIzquierda, { algo => algo.esEncontrado(tomasIzquierda) })
+		game.onCollideDo( tomasIzquierda, { algo => algo.proximidadTomas(tomasIzquierda) })
 	}
 }

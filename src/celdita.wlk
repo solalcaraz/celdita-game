@@ -12,7 +12,7 @@ object celdita {
 		game.height(11)
 		game.width(20)
 		game.addVisual(menu)
-		game.schedule(500, { => inicio.play() inicio.volume(0.2)})
+		game.schedule(300, { => inicio.play() inicio.volume(0.2)})
 		keyboard.enter().onPressDo{ self.explicar()}
 	}	
 	
@@ -36,11 +36,42 @@ object celdita {
 		game.addVisual(espada)
 		game.schedule(1000, { => espada.aparecer()})
 		game.addVisual(vidaCorazon)
+		
 		game.addVisual(puntajeTotal)
 		
 		//Inicio
 		config.configurarTeclas()
 		config.configurarColision()
 		game.schedule(8000,{ new Combate().iniciar()})
+	}	
+	
+	method gameOver(){
+		game.clear()
+		game.addVisual(perdiste)
+		perder.play()
+		keyboard.enter().onPressDo{ 
+			game.clear() 
+			perder.pause()
+			self.resetearValores() 
+			self.configuracionInicial()
+		}
+		keyboard.del().onPressDo{ game.stop()}
+	}
+	method resetearValores(){
+		tomas.mochila([])
+		tomas.vivo(true)
+		tomas.vida(100)
+		vidaCorazon.actualizar(100)
+		tomas.poderBase(10)
+	 	tomas.tieneEspada(false)
+		tomas.esInvencible(false)
+		tomas.puntaje(0)
+		tomas.estado('Basico')
+		espada.nombre('estatua')		
+	}
+	
+	method winner(){
+		ganar.play() 
+		keyboard.enter().onPressDo{ ganar.pause() game.stop()}
 	}	
 }

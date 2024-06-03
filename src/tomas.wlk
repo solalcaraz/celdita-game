@@ -15,7 +15,7 @@ object tomas {
 	var property tieneEspada = false
 	var property esInvencible = false
 	var property esMalo = false
-	var property puntaje = 15
+	var property puntaje = 0
 	
 	var property estado = "Basico" 
 	var property nombre = "tomas"
@@ -33,9 +33,10 @@ object tomas {
 									or game.uniqueCollider(colisionador).esCaminable()  
 
 	method procesarMovimiento(colisionador){
-		if(not self.validacion(colisionador)){ self.error("") }
-		sonidos.nuevoSonido("pasos.mp3")
-		position = colisionador.position()			
+		if(self.validacion(colisionador)){
+			sonidos.nuevoSonido("pasos.mp3")
+			position = colisionador.position()	
+		}			
 	}
 	
 	method moverseA(colisionador) {
@@ -47,50 +48,43 @@ object tomas {
 //Vida del personaje
 	method esAtacado(danio) {
 		if (not esInvencible){
-			estado = "Herido"
-			game.schedule(80,{estado = "Basico" 
-							self.sonido("herido.mp3") })
 			vida -= danio
 			vidaCorazon.actualizar(vida)
-			if(vida <= 0) { self.morir()}			
+			if(vida <= 0) { self.morir()} else {
+				estado = "Herido"
+				game.schedule(80,{estado = "Basico" 
+								self.sonido("herido.mp3") })				
+			}
 		}
-	}
-	
-	method perdio() {
-		game.clear()
-		batalla.pause()
-		game.addVisual(perdiste)
-		perdiste.resetearValores() 
 	}
 	
 	method morir() {
 		vivo = false
 		batalla.pause()
-		game.say(self, "Has muerto!")
 		self.sonido("muere.mp3")
-		game.removeVisual(self)
-		self.perdio()
+		celdita.gameOver() 
 	}
 		
 //Matar monstruos 
 	method atacar(colisionador) {
-		if(game.colliders(colisionador).isEmpty()){	self.error("Nada que atacar")}
-		if(tieneEspada){ self.sonido("golpeEspada.mp3")} else { self.sonido("golpeMano.mp3")}
-		game.uniqueCollider(colisionador).recibirDanio(poderBase)
+		if(not game.colliders(colisionador).isEmpty()){
+			if(tieneEspada){ self.sonido("golpeEspada.mp3")} else { self.sonido("golpeMano.mp3")}
+			game.uniqueCollider(colisionador).recibirDanio(poderBase)
+		}
 	}
 	
 //Puntaje
 	method actualizarPuntaje() { 
 		puntaje = puntaje + 1
-		puntajeTotal.mostrar(puntaje)
 		self.checkGanar()
 	}
+	
 	method checkGanar(){
-		if(puntaje == 15){
+		if(puntaje == 20){
 			game.clear()
 			batalla.pause()
 			game.addVisual(ganaste)
-			ganaste.salir()
+			celdita.winner()
 		}
 	} 
 
