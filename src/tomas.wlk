@@ -69,7 +69,7 @@ object tomas {
 	method atacar(colisionador) {
 		if(not game.colliders(colisionador).isEmpty()){
 			if(tieneEspada){ self.sonido("golpeEspada.mp3")} else { self.sonido("golpeMano.mp3")}
-			game.uniqueCollider(colisionador).recibirDanio(poderBase)
+			game.colliders(colisionador).first().recibirDanio(poderBase)
 		}
 	}
 	

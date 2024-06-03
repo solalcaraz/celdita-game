@@ -8,7 +8,7 @@ class Combate {
 	method iniciar(){
 		batalla.play()
 		batalla.volume(0.05)
-		game.onTick(2000, "generarEnemigos", { => enemigos.generar()})	
+		game.onTick(1000, "generarEnemigos", { => enemigos.generar()})	
 	}
 }
 

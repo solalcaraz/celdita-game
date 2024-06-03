@@ -17,10 +17,10 @@ class Pociones{
 	
 	method aparecer(posMonstruo) {
 		game.addVisualIn(self, posMonstruo)
-		if (game.hasVisual(self)) { game.schedule(3000, { =>self.desaparecer()}) }
+		game.schedule(3000, { =>self.desaparecer()})
 	}
 	
-	method desaparecer(){ game.removeVisual(self)}
+	method desaparecer(){ if (game.hasVisual(self)) {game.removeVisual(self)} }
 	
 //Colision con el personaje
 	method esEncontrado(){

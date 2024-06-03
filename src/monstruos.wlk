@@ -33,8 +33,12 @@ class Monstruos {
 	method desaparecer(){ self.detenerse() game.removeVisual(self)}
 	
 //Validaciones
-	method movimiento() { game.onTick(2500, "movimiento", { => self.moverse()})}
-	method detenerse() { game.removeTickEvent("movimiento")}
+	method movimiento() { game.onTick(2000, "movimiento", { => self.moverse()})}
+	method detenerse() { 
+		try{ 
+			game.removeTickEvent("movimiento")	
+		} catch e:wollok.lang.Exception{}
+	}
 	
 	 method estaEnElTablero() = position.x().between(0, 19) and position.y().between(0, 10)
 	
@@ -82,12 +86,12 @@ class Monstruos {
 	}
 	
 //Independientes para cada tipo
-	method aleatorio() = (0.randomUpTo(2).truncate(0) != 1)
+	method aleatorio() = (0.randomUpTo(2).truncate(0) == 1)
 	method soltarPocion() { pocion.aparecer(position)}
 	method moverse()
 }
 
-class Sombrio inherits Monstruos(vida = 100, poderBase = 10, pocion = new PocionAturdimiento(), nombre = "sombrio", sonidoDe = "sombrioHerido.mp3") {
+class Sombrio inherits Monstruos(vida = 50, poderBase = 40, pocion = new PocionInvencible(), nombre = "sombrio", sonidoDe = "sombrioHerido.mp3") {
 	override method moverse(){
 		if (0.randomUpTo(2).truncate(0) == 1  and self.estaEnElTablero()){
 			position = self.position().left(2)
@@ -99,7 +103,7 @@ class Sombrio inherits Monstruos(vida = 100, poderBase = 10, pocion = new Pocion
 	}
 }
 
-class Slime inherits Monstruos(vida = 80, poderBase = 8, pocion = new PocionInvencible(), nombre = "slime", sonidoDe = "slimeHerido.mp3") {
+class Slime inherits Monstruos(vida = 60, poderBase = 20, pocion = new PocionFuerza(), nombre = "slime", sonidoDe = "slimeHerido.mp3") {
 	override method moverse(){
 		if(self.position().y() > tomas.position().y()  and self.estaEnElTablero()){
 			position = self.position().down(1)
@@ -109,7 +113,7 @@ class Slime inherits Monstruos(vida = 80, poderBase = 8, pocion = new PocionInve
 	}
 }
 
-class Esqueleto inherits Monstruos(vida = 50, poderBase = 5, pocion = new PocionFuerza(), nombre = "esqueleto", sonidoDe = "esqueletoHerido.mp3") {
+class Esqueleto inherits Monstruos(vida = 80, poderBase = 10, pocion = new PocionAturdimiento(), nombre = "esqueleto", sonidoDe = "esqueletoHerido.mp3") {
 	override method moverse(){
 		if(self.position().x() > tomas.position().x() and self.estaEnElTablero()){
 			position = self.position().down(1)

@@ -42,7 +42,7 @@ object celdita {
 		//Inicio
 		config.configurarTeclas()
 		config.configurarColision()
-		game.schedule(8000,{ new Combate().iniciar()})
+		game.schedule(7000,{ new Combate().iniciar()})
 	}	
 	
 	method gameOver(){
@@ -53,7 +53,7 @@ object celdita {
 			game.clear() 
 			perder.pause()
 			self.resetearValores() 
-			self.configuracionInicial()
+			self.configurar()
 		}
 		keyboard.del().onPressDo{ game.stop()}
 	}
@@ -66,6 +66,7 @@ object celdita {
 	 	tomas.tieneEspada(false)
 		tomas.esInvencible(false)
 		tomas.puntaje(0)
+		tomas.position(game.origin()) 
 		tomas.estado('Basico')
 		espada.nombre('estatua')		
 	}
