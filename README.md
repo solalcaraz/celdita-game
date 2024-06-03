@@ -6,19 +6,21 @@
 - Alcaraz, Maria Sol
 - Palomba, Damian
 - Zolla, Santiago
-- Thiago
 
 ## Capturas
 
-(agregar)
+![Menu de inicio](assets/menuInicial.png)
+![En accion](assets/enAccion.jpg)
 
 ## Reglas de Juego / Instrucciones
 
-(Escribirlas)
+- Para moverte deberas usar: WASD
+- Para atacar a los monstruos tendras que posicionarte al lado del mismo y usar: FLECHAS
+- Solo podras llevar 3 pociones en tu mochila y para activarlas usar: P
 
 
 ## Otros
 
 - Materia: Algoritmos I - UNSAM
 - Versión de wollok
-- Una vez terminado, no tenemos problemas en que el repositorio sea público / queremos manternerlo privado ¿?
+- Una vez terminado, no tenemos problemas en que el repositorio sea público
