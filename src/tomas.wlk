@@ -60,7 +60,6 @@ object tomas {
 	
 	method morir() {
 		vivo = false
-		batalla.pause()
 		self.sonido("muere.mp3")
 		celdita.gameOver() 
 	}

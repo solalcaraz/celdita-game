@@ -51,7 +51,7 @@ object espada {
 		nombre = "espada"
 		esCaminable = true
 		if(not tomas.tieneEspada()) { game.addVisual(self)}
-		inicio.pause()
+		if(not inicio.paused()) inicio.pause()
 		sonidos.nuevoSonido("aparicion.mp3")
 	}
 	
@@ -64,8 +64,7 @@ object espada {
 	}
 	
 	method desaparecer(){ game.removeVisual(self)}
-	
-	method proximidadTomas(personaje){ game.say(self, "Agarrame")}
+	method proximidadTomas(personaje){}
 	method recibirDanio(danio){}
 }
 

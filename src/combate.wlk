@@ -6,7 +6,12 @@ import sonidos.*
 class Combate {
 	
 	method iniciar(){
-		batalla.play()
+		if(batalla.played()){
+			batalla.resume()
+		}	
+		else{ 
+			batalla.play()
+		}
 		batalla.volume(0.05)
 		game.onTick(1000, "generarEnemigos", { => enemigos.generar()})	
 	}

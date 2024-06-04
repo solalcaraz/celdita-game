@@ -46,7 +46,9 @@ class Monstruos {
 
 //Acercamiento con tomas y ataque
 	method logicaAtaque(colisionador) {
-		game.schedule(1000, {self.atacar(colisionador.posTomas())})
+		var postomas = new Position()
+		postomas = colisionador.posTomas()
+		game.schedule(500, {self.atacar(postomas)})
 		game.schedule(1000, {self.continuarAtaque(colisionador)})		
 	}
 	
@@ -64,7 +66,8 @@ class Monstruos {
 	}
 	
 	method atacar(posicion){
-		if(not game.getObjectsIn(posicion).isEmpty() and vivo){
+		
+		if(not game.getObjectsIn(posicion).isEmpty() and game.getObjectsIn(posicion).contains(tomas) and vivo){
 			game.getObjectsIn(posicion).first().esAtacado(poderBase)
 		}
 	}

@@ -19,13 +19,13 @@ object celdita {
 	method explicar() {
 		game.clear()
 		game.addVisual(explicacion)
-		keyboard.enter().onPressDo{ self.configurar()}
+		keyboard.enter().onPressDo{inicio.pause() self.configurar()}
 	}
 	
 	method configurar() {
-		inicio.volume(0.2)
 		game.clear()
 		game.addVisual(fondo)
+		
 		
 		//Visuales
 		game.addVisual(tomas)
@@ -48,6 +48,7 @@ object celdita {
 	method gameOver(){
 		game.clear()
 		game.addVisual(perdiste)
+		batalla.pause()
 		perder.play()
 		keyboard.enter().onPressDo{ 
 			game.clear() 
@@ -55,7 +56,7 @@ object celdita {
 			self.resetearValores() 
 			self.configurar()
 		}
-		keyboard.del().onPressDo{ game.stop()}
+		keyboard.backspace().onPressDo{ game.stop()}
 	}
 	method resetearValores(){
 		tomas.mochila([])
@@ -65,6 +66,7 @@ object celdita {
 		tomas.poderBase(10)
 	 	tomas.tieneEspada(false)
 		tomas.esInvencible(false)
+		espada.esCaminable(false)
 		tomas.puntaje(0)
 		tomas.position(game.origin()) 
 		tomas.estado('Basico')
