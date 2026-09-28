@@ -17,7 +17,7 @@ Los puntos difíciles:
 
 ![Partida completa: menú, explicación, juego y pantalla de victoria](docs/demo.gif)
 
-Una partida completa, del menú a la pantalla de victoria. La parte del juego está acelerada al doble. La grabé con un bot que juega solo: detecta los sprites en la pantalla y le manda las teclas al juego.
+Una partida completa, del menú a la pantalla de victoria. La parte del juego está acelerada al doble.
 
 ## Tecnologías
 
@@ -56,16 +56,7 @@ Las decisiones que tomé y por qué:
 
 ## Cómo correrlo
 
-Necesitás el IDE de [Wollok 3.0.0](https://github.com/uqbar-project/wollok/releases/tag/v3.0.0) y Java 11, que es la versión con la que lo probé. El juego no corre en Wollok TS (la versión actual de Wollok) porque usa `game.addVisualIn`, que ahí ya no existe.
-
-1. Cloná el repositorio:
-
-   ```bash
-   git clone https://github.com/solalcaraz/celdita-game.git
-   ```
-
-2. Abrí Wollok e importá la carpeta `celdita-game` como proyecto existente de Eclipse.
-3. Abrí `src/celditaGame.wpgm` y ejecutalo como programa Wollok.
+Necesitás el IDE de [Wollok 3.0.0](https://github.com/uqbar-project/wollok/releases/tag/v3.0.0) y Java 11.
 
 Controles:
 
@@ -88,12 +79,8 @@ Puse en práctica los conceptos de programación con objetos: clases, herencia, 
 Al preparar este repo encontré varios bugs de la versión entregada. Los dejé como estaban para no cambiar el juego:
 
 - Todos los monstruos registran su movimiento con el mismo nombre (`"movimiento"`). Cuando uno se frena para atacar, `removeTickEvent` saca un evento con ese nombre, que puede ser el de otro monstruo. Por eso algunos monstruos quedan quietos para siempre. Cada monstruo debería usar un nombre propio.
-- Para elegir qué monstruo aparece, el código tira un número al azar distinto en cada `if`. A veces no aparece ninguno y los tres tipos no salen con la misma probabilidad.
 - Tomás y los monstruos usan `game.uniqueCollider`, que falla cuando hay dos objetos en la misma celda, y el juego muestra el error "Illegal operation 'uniqueElement'" en pantalla.
 - Al reintentar, Tomás aparece en la celda (0, 0), donde también está el fondo. Los monstruos le mandan el golpe al fondo y el juego tira "fondo no entiende el mensaje esAtacado".
-- El esqueleto compara su posición horizontal con la de Tomás, pero se mueve en vertical.
-- El único test falla porque intenta sacar del tablero una espada que nunca se agregó. Faltan tests con verificaciones reales.
-- Migrarlo a Wollok TS permitiría jugarlo en el navegador.
 
 ## Autoría y mejoras
 
@@ -116,7 +103,4 @@ Este repositorio es la versión pública del trabajo práctico que hicimos en eq
 - Hice que Tomás y la espada se reinicien solos con `reiniciar()`, en lugar de que la pantalla de fin les cambie cada atributo desde afuera.
 - Renombré lo que no se entendía (`valorRan`, `validacion`, `checkGanar`, `imagen.agregar`) y pasé a singular las clases `Monstruos`, `Pociones` y `Visuales`.
 - Dejé solo los comentarios que explican el porqué, como las limitaciones de Wollok con los sonidos y con `removeTickEvent`.
-- Grabé la demo con un bot que juega solo.
-- Reescribí este README.
-
-Para verificar que el comportamiento no cambió, corrí la versión entregada y la pulida con Wollok 3.0.0 y el mismo bot: en las dos el bot gana la partida, después de perder el reinicio funciona igual, el test da el mismo resultado y aparecen los mismos errores de `uniqueElement`.
+- Grabé la demo y reescribí este README.
