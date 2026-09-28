@@ -1,40 +1,33 @@
 import wollok.game.*
-import tomas.*
-import celdita.*
-import sonidos.*
 
-//Metodo para colocar una imagen
 object imagen {
-	method agregar(personaje, estado) = personaje + estado + ".png"
+	method archivo(nombre, estado) = nombre + estado + ".png"
 }
 
-//Visuales de la pantalla
-class Visuales{
-	var nombre
+class Visual {
+	const nombre
 	const property esCaminable = true
 	const property esMalo = false
 
 	var property position = game.origin()
 	var property estado = "Inicial"
-	var property image = imagen.agregar(nombre, estado)
-	
-	//Colisiones con el personaje
+	var property image = imagen.archivo(nombre, estado)
+
 	method esEncontrado(){}
 	method proximidadTomas(personaje){}
 	method recibirDanio(danio){}
 }
-object menu inherits Visuales (nombre = "menu"){}
-object explicacion inherits Visuales (nombre = "explicacion"){}
-object fondo inherits Visuales (nombre = "bosque"){}
+object menu inherits Visual (nombre = "menu"){}
+object explicacion inherits Visual (nombre = "explicacion"){}
+object fondo inherits Visual (nombre = "bosque"){}
 
-object ganaste inherits Visuales(nombre = "ganaste"){}	
-object perdiste inherits Visuales(nombre = "perdiste", position = game.origin()){}
+object ganaste inherits Visual(nombre = "ganaste"){}
+object perdiste inherits Visual(nombre = "perdiste"){}
 
-// Visual de la vida, que al tener mas
-object vidaCorazon inherits Visuales (nombre = "corazones_", estado = "3", position = game.at(17, 0)){	
+object vidaCorazon inherits Visual (nombre = "corazones_", estado = "3", position = game.at(17, 0)){
 	method recargarImagen(valor){
 		estado = valor
-		image = imagen.agregar(nombre, estado)
+		image = imagen.archivo(nombre, estado)
 	}
 	method actualizar(vidaTomas){
 		if (vidaTomas  <= 0){ game.removeVisual(self)

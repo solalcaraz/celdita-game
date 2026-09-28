@@ -5,98 +5,90 @@ import extra.*
 import visuales.*
 import sonidos.*
 
-class Monstruos {
-	var nombre
+class Monstruo {
+	const nombre
 	var vida
 	var vivo = false
-	var sonidoDe
-	var property estado = "Basico"
-	
-	var pocion
-	var poderBase
-	var property esCaminable = false
-	var property esMalo = true
-	var property movil = true
+	const sonidoHerido
+	var estado = "Basico"
 
-//Configuracion de imagen, sonido y posicion
+	const pocion
+	const poderBase
+	const property esCaminable = false
+	const property esMalo = true
+
 	var property position = game.origin()
-	method image() = imagen.agregar(nombre, estado)
-	method sonido() { sonidos.nuevoSonido(sonidoDe)}
-	
+	method image() = imagen.archivo(nombre, estado)
+
 	method aparecer(){
-		position = game.at(0.randomUpTo(game.width()).truncate(0), 0.randomUpTo(game.height()).truncate(0))
+		position = game.at(azar.entero(0, game.width()), azar.entero(0, game.height()))
 		game.addVisual(self)
 		vivo = true
 		self.movimiento()
-	}	
-	
+	}
+
 	method desaparecer(){ self.detenerse() game.removeVisual(self)}
-	
-//Validaciones
+
 	method movimiento() { game.onTick(2000, "movimiento", { => self.moverse()})}
-	method detenerse() { 
-		try{ 
-			game.removeTickEvent("movimiento")	
+	method detenerse() {
+		// removeTickEvent da error si ya no queda ningún evento con ese nombre,
+		// y todos los monstruos comparten el mismo.
+		try{
+			game.removeTickEvent("movimiento")
 		} catch e:wollok.lang.Exception{}
 	}
-	
-	 method estaEnElTablero() = position.x().between(0, 19) and position.y().between(0, 10)
-	
-	method validacion(colisionador) = not game.colliders(colisionador).isEmpty() and game.uniqueCollider(colisionador).equals(self)
 
-//Acercamiento con tomas y ataque
+	method sigueAlLado(colisionador) = not game.colliders(colisionador).isEmpty() and game.uniqueCollider(colisionador).equals(self)
+
 	method logicaAtaque(colisionador) {
-		var postomas = new Position()
-		postomas = colisionador.posTomas()
-		game.schedule(500, {self.atacar(postomas)})
-		game.schedule(1000, {self.continuarAtaque(colisionador)})		
+		// La posición de Tomás se toma ahora y el golpe llega medio segundo después:
+		// si Tomás se movió en ese tiempo, el golpe no le llega.
+		const posicionDeTomas = colisionador.posTomas()
+		game.schedule(500, {self.atacar(posicionDeTomas)})
+		game.schedule(1000, {self.continuarAtaque(colisionador)})
 	}
-	
+
 	method esEncontrado(){}
-	
+
 	method proximidadTomas(colisionador){
 		self.detenerse()
 		self.logicaAtaque(colisionador)
 	}
-	
+
 	method continuarAtaque(colisionador){
-		if(self.validacion(colisionador) and vivo){
+		if(self.sigueAlLado(colisionador) and vivo){
 			self.logicaAtaque(colisionador)
 		} else { self.movimiento()}
 	}
-	
+
 	method atacar(posicion){
-		
-		if(not game.getObjectsIn(posicion).isEmpty() and game.getObjectsIn(posicion).contains(tomas) and vivo){
+		if(game.getObjectsIn(posicion).contains(tomas) and vivo){
 			game.getObjectsIn(posicion).first().esAtacado(poderBase)
 		}
 	}
-	
-//Vida del monstruo y muerte
+
 	method recibirDanio(danio){
 		vida -= danio
 		estado = "Herido"
-		game.schedule(50,{estado = "Basico" self.sonido()})
-		if(vida <= 0){ self.morir()}// else { self.error("Sigue vivo")}
+		game.schedule(50,{estado = "Basico" sonidos.reproducir(sonidoHerido)})
+		if(vida <= 0){ self.morir()}
 	}
-	
+
 	method morir() {
 		vivo = false
-		sonidos.nuevoSonido("muerteMonst.mp3")
-		self.desaparecer()	
-		if(self.aleatorio()){ self.soltarPocion()}
+		sonidos.reproducir("muerteMonst.mp3")
+		self.desaparecer()
+		if(azar.entero(0, 2) == 1){ self.soltarPocion()}
 		tomas.actualizarPuntaje()
 	}
-	
-//Independientes para cada tipo
-	method aleatorio() = (0.randomUpTo(2).truncate(0) == 1)
+
 	method soltarPocion() { pocion.aparecer(position)}
 	method moverse()
 }
 
-class Sombrio inherits Monstruos(vida = 50, poderBase = 40, pocion = new PocionInvencible(), nombre = "sombrio", sonidoDe = "sombrioHerido.mp3") {
+class Sombrio inherits Monstruo(vida = 50, poderBase = 40, pocion = new PocionInvencible(), nombre = "sombrio", sonidoHerido = "sombrioHerido.mp3") {
 	override method moverse(){
-		if (0.randomUpTo(2).truncate(0) == 1  and self.estaEnElTablero()){
+		if (azar.entero(0, 2) == 1  and tablero.contiene(position)){
 			position = self.position().left(2)
 			position = self.position().up(1)
 		} else {
@@ -106,9 +98,9 @@ class Sombrio inherits Monstruos(vida = 50, poderBase = 40, pocion = new PocionI
 	}
 }
 
-class Slime inherits Monstruos(vida = 60, poderBase = 20, pocion = new PocionFuerza(), nombre = "slime", sonidoDe = "slimeHerido.mp3") {
+class Slime inherits Monstruo(vida = 60, poderBase = 20, pocion = new PocionFuerza(), nombre = "slime", sonidoHerido = "slimeHerido.mp3") {
 	override method moverse(){
-		if(self.position().y() > tomas.position().y()  and self.estaEnElTablero()){
+		if(self.position().y() > tomas.position().y()  and tablero.contiene(position)){
 			position = self.position().down(1)
 		} else {
 			position = self.position().up(1)
@@ -116,9 +108,9 @@ class Slime inherits Monstruos(vida = 60, poderBase = 20, pocion = new PocionFue
 	}
 }
 
-class Esqueleto inherits Monstruos(vida = 80, poderBase = 10, pocion = new PocionAturdimiento(), nombre = "esqueleto", sonidoDe = "esqueletoHerido.mp3") {
+class Esqueleto inherits Monstruo(vida = 80, poderBase = 10, pocion = new PocionAturdimiento(), nombre = "esqueleto", sonidoHerido = "esqueletoHerido.mp3") {
 	override method moverse(){
-		if(self.position().x() > tomas.position().x() and self.estaEnElTablero()){
+		if(self.position().x() > tomas.position().x() and tablero.contiene(position)){
 			position = self.position().down(1)
 		} else {
 			position = self.position().up(1)

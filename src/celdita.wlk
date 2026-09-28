@@ -26,8 +26,6 @@ object celdita {
 		game.clear()
 		game.addVisual(fondo)
 		
-		
-		//Visuales
 		game.addVisual(tomas)
 		game.addVisual(tomasIzquierda)
 		game.addVisual(tomasDerecha)
@@ -39,7 +37,6 @@ object celdita {
 		
 		game.addVisual(puntajeTotal)
 		
-		//Inicio
 		config.configurarTeclas()
 		config.configurarColision()
 		game.schedule(7000,{ new Combate().iniciar()})
@@ -53,24 +50,11 @@ object celdita {
 		keyboard.enter().onPressDo{ 
 			game.clear() 
 			perder.pause()
-			self.resetearValores() 
+			tomas.reiniciar()
+			espada.reiniciar()
 			self.configurar()
 		}
 		keyboard.backspace().onPressDo{ game.stop()}
-	}
-	method resetearValores(){
-		tomas.mochila([])
-		tomas.vivo(true)
-		tomas.vida(100)
-		vidaCorazon.actualizar(100)
-		tomas.poderBase(10)
-	 	tomas.tieneEspada(false)
-		tomas.esInvencible(false)
-		espada.esCaminable(false)
-		tomas.puntaje(0)
-		tomas.position(game.origin()) 
-		tomas.estado('Basico')
-		espada.nombre('estatua')		
 	}
 	
 	method winner(){

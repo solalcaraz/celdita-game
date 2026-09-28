@@ -1,28 +1,23 @@
 import wollok.game.*
 import tomas.*
-import monstruos.*
-import extra.*
 import visuales.*
-import sonidos.*
 
-class Pociones{
+class Pocion {
 	const nombre = "pocion_"
-	var tipoPocion
+	const tipoPocion
 
-	var property esCaminable = true
-	var property esMalo = false
+	const property esCaminable = true
+	const property esMalo = false
 
-//Aparicion de la pocion
-	method image() = imagen.agregar(nombre, tipoPocion)
-	
+	method image() = imagen.archivo(nombre, tipoPocion)
+
 	method aparecer(posMonstruo) {
 		game.addVisualIn(self, posMonstruo)
 		game.schedule(3000, { =>self.desaparecer()})
 	}
-	
+
 	method desaparecer(){ if (game.hasVisual(self)) {game.removeVisual(self)} }
-	
-//Colision con el personaje
+
 	method esEncontrado(){
 		if(tomas.tieneCapacidad()){
 			tomas.mochila().add(game.uniqueCollider(tomas))
@@ -30,30 +25,28 @@ class Pociones{
 			self.desaparecer()
 		} else { game.say(self, "No puedo cargar más") }
 	}
-	
-	method proximidadTomas(colisionador){}	
+
+	method proximidadTomas(colisionador){}
 	method recibirDanio(danio){}
-	
-// Propio de cada tipo
+
 	method activar(personaje)
-	
+
 	method malosEnMapa() = game.allVisuals().filter({malo => malo.esMalo()})
-	method malosMoviles() = self.malosEnMapa().filter({malo => malo.movil()})
 }
 
-class PocionInvencible inherits Pociones (tipoPocion = "invencibilidad") {
+class PocionInvencible inherits Pocion (tipoPocion = "invencibilidad") {
 	 override method activar(personaje){
 	 	game.say(personaje, "Invencible!")
 		personaje.vida(100)
 		vidaCorazon.actualizar(100)
 		personaje.estado("Invencible")
 		personaje.esInvencible(true)
-		game.schedule(5000, {personaje.estado("Basico") 
+		game.schedule(5000, {personaje.estado("Basico")
 							personaje.esInvencible(false)})
 	 }
 }
 
-class PocionFuerza inherits Pociones (tipoPocion = "fuerza") {
+class PocionFuerza inherits Pocion (tipoPocion = "fuerza") {
 	 override method activar(personaje){
 	 	game.say(personaje, 'Fuerte!')
 	 	personaje.poderBase(personaje.poderBase()*2)
@@ -61,9 +54,9 @@ class PocionFuerza inherits Pociones (tipoPocion = "fuerza") {
 	 }
 }
 
-class PocionAturdimiento inherits Pociones (tipoPocion = "aturdimiento") {
+class PocionAturdimiento inherits Pocion (tipoPocion = "aturdimiento") {
 	override method activar(personaje){
 	 	game.say(personaje, 'Aturdir!!')
-		self.malosEnMapa().forEach({ malo => malo.detenerse() malo.movil(false)})
+		self.malosEnMapa().forEach({ malo => malo.detenerse()})
 	 }
 }

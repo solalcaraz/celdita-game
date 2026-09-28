@@ -9,13 +9,11 @@ object config {
 		keyboard.w().onPressDo({ tomas.moverseA(tomasArriba)})
 		keyboard.s().onPressDo({ tomas.moverseA(tomasAbajo)})
 		
-		//Para atacar
 		keyboard.up().onPressDo({ tomas.atacar(tomasArriba)})
 		keyboard.down().onPressDo({ tomas.atacar(tomasAbajo)})
 		keyboard.left().onPressDo({ tomas.atacar(tomasIzquierda)})
 		keyboard.right().onPressDo({ tomas.atacar(tomasDerecha)})
 		
-		//Para usar las pociones
 		keyboard.p().onPressDo({ tomas.usarPocion()})
 	}
 	method configurarColision(){

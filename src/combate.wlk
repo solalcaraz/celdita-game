@@ -1,11 +1,13 @@
 import wollok.game.*
 import monstruos.*
-import visuales.*
+import extra.*
 import sonidos.*
 
 class Combate {
 	
 	method iniciar(){
+		// Al reintentar, la música de batalla ya se reprodujo una vez y Wollok no deja
+		// reproducirla de nuevo: por eso se retoma.
 		if(batalla.played()){
 			batalla.resume()
 		}	
@@ -18,11 +20,9 @@ class Combate {
 }
 
 object enemigos{
-	method valorRan() = 0.randomUpTo(3).truncate(0)
-	
 	method generar(){
-		if(self.valorRan() == 1){ new Slime().aparecer()
-		} else if(self.valorRan() == 0){ new Sombrio().aparecer()
-		} else if(self.valorRan() == 2){ new Esqueleto().aparecer() }
+		if(azar.entero(0, 3) == 1){ new Slime().aparecer()
+		} else if(azar.entero(0, 3) == 0){ new Sombrio().aparecer()
+		} else if(azar.entero(0, 3) == 2){ new Esqueleto().aparecer() }
 	}
 }
